@@ -1,9 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
 use App\Constants\UsersConstants;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
 class CreateUsersTable extends Migration
 {
     /**
@@ -16,9 +17,9 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->uuid(UsersConstants::userId)->unique();
-            $table->string('name',100);
-            $table->string("email",100);
-            $table->string("phone",15);
+            $table->string('name', 100);
+            $table->string("email", 100);
+            $table->string("phone", 15);
             $table->timestamps();
         });
     }

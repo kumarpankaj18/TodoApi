@@ -1,9 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
 use App\UsersConstants;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
 class CreateTasksTable extends Migration
 {
     /**
@@ -15,10 +16,10 @@ class CreateTasksTable extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title',100);
+            $table->string('title', 100);
             $table->string('description')->nullable();
             $table->uuid('user_id');
-            $table->enum('status' , ["completed", "pending"]);
+            $table->enum('status', ["completed", "pending"]);
             $table->foreign(UsersConstants::userId)->references(UsersConstants::userId)->on("users");
             $table->index(UsersConstants::userId);
 

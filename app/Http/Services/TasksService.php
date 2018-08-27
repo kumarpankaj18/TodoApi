@@ -8,15 +8,16 @@
 
 namespace App\Http\Services;
 
-use App\UsersConstants;
 use App\Models\Task;
+use App\UsersConstants;
 use Illuminate\Http\Request;
 
 class TasksService
 {
     public function createOrUpdateTasks(Request $request, Task $task = null)
     {
-        if($task == null){
+        if ($task == null)
+        {
             $task = new Task();
             $task->user_id = $request->input(UsersConstants::userId);
         }
@@ -24,21 +25,24 @@ class TasksService
         $task->description = $request->input("description");
         $task->status = $request->input("status");
         $task->save();
+
         return $task;
     }
 
     public function getTaskById(int $id)
     {
-        if($id === null)
+        if ($id === null)
         {
             return null;
         }
+
         return Task::find($id);
     }
 
     public function deleteTask(int $id)
     {
         $task = Task::findOrFail($id);
+
         return $task->delete();
 
     }
@@ -47,18 +51,20 @@ class TasksService
     {
         $task->status = $request->input(TasksConstants::Status);
         $task->save();
+
         return $task;
     }
 
-    public function  getAllTasks()
+    public function getAllTasks()
     {
         return Task::all();
     }
 
-    public function getUserTasks(String $userId){
+    public function getUserTasks(String $userId)
+    {
         return Task::where('user_id', $userId)
-                    ->orderBy('status','desc')
-                    ->orderBy('created_at', 'asc')
-                    ->get();
+            ->orderBy('status', 'desc')
+            ->orderBy('created_at', 'asc')
+            ->get();
     }
 }

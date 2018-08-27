@@ -8,41 +8,42 @@
 
 namespace App\Http\Services;
 
-use App\Models\User;
 use App\Constants\UsersConstants;
+use App\Models\User;
 use Illuminate\Http\Request;
-use phpDocumentor\Reflection\Types\Integer;
-use Prophecy\Util\StringUtil;
 
 class UserService
 {
 
     public function getUserById(int $id)
     {
-        if($id === null)
+        if ($id === null)
         {
             return null;
         }
+
         return User::find($id);
     }
 
-    public function  getAllTasks()
+    public function getAllTasks()
     {
         return User::all();
     }
 
     public function getUserByUserId(String $userId)
     {
-        if($userId === null)
+        if ($userId === null)
         {
             return null;
         }
-        return User::where(UsersConstants::userId , $userId)->first();
+
+        return User::where(UsersConstants::userId, $userId)->first();
     }
 
-    public function deleteUser(int $id){
+    public function deleteUser(int $id)
+    {
         $user = User::findOrFail($id);
-        if($user != null)
+        if ($user != null)
         {
             return $user->delete();
         }
@@ -50,7 +51,8 @@ class UserService
 
     public function createOrUpdateUser(Request $request, $user = null)
     {
-        if($user == null){
+        if ($user == null)
+        {
             $user = new User();
             $user->user_id = uniqid();
         }
@@ -58,6 +60,7 @@ class UserService
         $user->email = $request->input("email");
         $user->phone = $request->input("phone");
         $user->save();
+
         return $user;
     }
 

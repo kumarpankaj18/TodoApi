@@ -2,15 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Constants\UsersConstants;
+use Illuminate\Database\Eloquent\Model;
 
 class User extends Model
 {
     public function tasks()
     {
-        return $this->hasMany('App\Models\Task',UsersConstants::userId, UsersConstants::userId);
+        return $this->hasMany('App\Models\Task', UsersConstants::userId, UsersConstants::userId);
     }
 }
