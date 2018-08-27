@@ -10,21 +10,14 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-use Illuminate\Support\Facades\DB;
 
 
 Route::get('/', function () {
-    $users = \App\User::where('user_id','abcdfs')->get();
-    $user = "";
-    foreach($users as $user){
-     //   var_dump($user->tasks);
-    }
-    return $user->tasks;
+    return view('welcome');
 });
 
-Route::resource('todo', 'TodoListController')->only(['show','update','destroy','store']);
-Route::resource('user', 'UserController')->only(['show','destroy']);
+Route::resource('tasks', 'TasksController')->only(['show','update','destroy','store', 'index']);
+Route::resource('user', 'UserController')->only(['show','destroy','update','store', 'index']);
 
-
-Route::put('/user/{id?}', 'UserController@update');
-Route::post('/user/', 'UserController@store');
+Route::get('/user/{user_id}/tasks', 'TasksController@getUserTasks');
+Route::put('/tasks/{id}/updateStatus', 'TasksController@updateTaskStatus');

@@ -10,6 +10,6 @@ class User extends Model
 {
     public function tasks()
     {
-        return $this->hasMany('App\Models\TodoTask',"user_id", "user_id");
+        return $this->hasMany('App\Models\Task',UsersConstants::userId, UsersConstants::userId);
     }
 }

@@ -4,23 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\validator\UserValidator;
 use App\Http\Services\UserService;
-use App\Models\User;
 use Illuminate\Http\Request;
-use phpDocumentor\Reflection\Types\Integer;
-use Psy\Util\Str;
 
 class UserController extends Controller
 {
 
     protected  $service ;
     protected  $validator;
+
     public function __construct()
     {
         $this->service = new UserService();
         $this->validator = new UserValidator();
     }
 
-
+    public function index()
+    {
+        return response()->json($this->service->getAllTasks());
+    }
     /**
      * Store a newly created resource in storage.
      *

@@ -3,14 +3,13 @@
  * Created by PhpStorm.
  * User: pankajkumar
  * Date: 27/08/18
- * Time: 4:52 PM
+ * Time: 11:58 PM
  */
 
-namespace App\Http\Controllers\validator;
+namespace App;
 
 
-class Constants
+class UsersConstants
 {
-
-
+    const userId = "user_id";
 }

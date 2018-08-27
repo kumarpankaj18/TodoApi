@@ -25,13 +25,18 @@ class UserService
         return User::find($id);
     }
 
+    public function  getAllTasks()
+    {
+        return User::all();
+    }
+
     public function getUserByUserId(String $userId)
     {
         if($userId === null)
         {
             return null;
         }
-        return User::where("user_id" , $userId);
+        return User::where(UsersConstants::userId , $userId)->first();
     }
 
     public function deleteUser(int $id){

@@ -10,6 +10,7 @@ namespace App\Http\Controllers\validator;
 
 
 
+use FlorianWolters\Component\Core\StringUtils;
 use Illuminate\Http\Request;
 
 class UserValidator
@@ -24,7 +25,7 @@ class UserValidator
             return $validtionStatus;
         }
 
-        return UserValidator::validateUserCreateRequest($request);
+        return self::validateUserCreateRequest($request);
 
     }
 
@@ -33,28 +34,34 @@ class UserValidator
         return $user === null ;
     }
 
+    public static function isInvalidUserId(Request $request)
+    {
+        $user_id = $request->input(UsersConstants::userId);
+        return StringUtils::isEmpty($user_id);
+    }
+
     public static function isInvalidValidUserName(Request $request)
     {
         $userName = $request->input("name");
-        return $userName === null || $userName === '';
+        return !preg_match("/^[a-zA-Z ]*$/", $userName);
     }
 
     public static function isInvalidValidEmail(Request $request)
     {
         $email = $request->input("email");
-        return $email === null || $email === '' ;
+        return !filter_var($email, FILTER_VALIDATE_EMAIL);
     }
 
     public static function isInvalidValidPhone(Request $request)
     {
         $phone = $request->input("phone");
-        return $phone === null || $phone === '';
+        return !(preg_match("^[6-9]\d{9}$", $phone));
     }
 
     public static function  validateUserCreateRequest(Request $request)
     {
         $validtionStatus = [];
-        $validtionStatus["status"] = "failure";
+        $validtionStatus["status"] = "success";
         if(self::isInvalidValidUserName($request)){
             $validtionStatus["status"] = "failure";
             $validtionStatus["error"] = "name is required field";
