@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\AppConstants;
+use App\Constants\AppConstants;
 use App\Http\Controllers\validator\TaskValidator;
 use App\Http\Controllers\validator\UserValidator;
 use App\Http\Services\TasksService;
 use App\Http\Services\UserService;
-use App\TasksConstants;
-use App\UsersConstants;
+use App\Constants\TasksConstants;
+use App\Constants\UsersConstants;
 use Illuminate\Http\Request;
 
 class TasksController extends Controller

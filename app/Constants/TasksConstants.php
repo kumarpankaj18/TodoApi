@@ -6,7 +6,7 @@
  * Time: 7:32 PM
  */
 
-namespace App;
+namespace App\Constants;
 
 
 class TasksConstants

@@ -10,17 +10,20 @@ namespace App\Http\Controllers\validator;
 
 
 
+use App\Constants\AppConstants;
+use App\Constants\TasksConstants;
 use FlorianWolters\Component\Core\StringUtils;
 use Illuminate\Http\Request;
+use App\Constants\UsersConstants;
 
 class UserValidator
 {
     public static function  validateUserUpdateRequest(Request $request, $user)
     {
         $validtionStatus = [];
-        $validtionStatus["status"] = "success";
+        $validtionStatus[TasksConstants::Status] = AppConstants::Success;
         if(self::isInvalidUser($user)){
-            $validtionStatus["status"] = "failure";
+            $validtionStatus[TasksConstants::Status] = AppConstants::Failure;
             $validtionStatus["error"] = "invalid user";
             return $validtionStatus;
         }
@@ -61,21 +64,21 @@ class UserValidator
     public static function  validateUserCreateRequest(Request $request)
     {
         $validtionStatus = [];
-        $validtionStatus["status"] = "success";
+        $validtionStatus[TasksConstants::Status] = AppConstants::Success;
         if(self::isInvalidValidUserName($request)){
-            $validtionStatus["status"] = "failure";
+            $validtionStatus[TasksConstants::Status] = AppConstants::Failure;
             $validtionStatus["error"] = "name is required field";
             return $validtionStatus;
         }
 
         if(self::isInvalidValidEmail($request)){
-            $validtionStatus["status"] = "failure";
+            $validtionStatus[TasksConstants::Status] = AppConstants::Failure;
             $validtionStatus["error"] = "email is required field";
             return $validtionStatus;
         }
 
         if(self::isInvalidValidPhone($request)){
-            $validtionStatus["status"] = "failure";
+            $validtionStatus[TasksConstants::Status] = AppConstants::Failure;
             $validtionStatus["error"] = "phone is required field";
             return $validtionStatus;
         }

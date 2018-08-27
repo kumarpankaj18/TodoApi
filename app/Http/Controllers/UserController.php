@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Constants\AppConstants;
 use App\Http\Controllers\validator\UserValidator;
 use App\Http\Services\UserService;
 use Illuminate\Http\Request;
@@ -31,7 +33,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $filteredRequest = $this->validator->validateUserCreateRequest($request);
-        if($filteredRequest["status"] === "failure")
+        if($filteredRequest["status"] === AppConstants::Failure)
         {
             return response()->json($filteredRequest,400);
         }
@@ -47,7 +49,7 @@ class UserController extends Controller
     public function show($id)
     {
         $user = $this->service->getUserById($id);
-        if(($user === null) || ($user === "")){
+        if(($user === null) or ($user === "")){
             return response($user, 404);
         }
 
@@ -65,7 +67,7 @@ class UserController extends Controller
     {
         $user = $this->service->getUserById($id);
         $filteredRequest = $this->validator->validateUserUpdateRequest($request, $user);
-        if($filteredRequest["status"] === "failure")
+        if($filteredRequest["status"] === AppConstants::Failure)
         {
             return response()->json($filteredRequest,400);
         }

@@ -9,10 +9,10 @@
 namespace App\Http\Controllers\validator;
 
 
-use App\AppConstants;
+use App\Constants\AppConstants;
 use App\Models\Task;
 use App\Models\User;
-use App\TasksConstants;
+use App\Constants\TasksConstants;
 use FlorianWolters\Component\Core\StringUtils;
 use Illuminate\Http\Request;
 
