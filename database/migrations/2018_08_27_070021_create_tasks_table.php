@@ -20,7 +20,7 @@ class CreateTasksTable extends Migration
             $table->string('title', 100);
             $table->string('description')->nullable();
             $table->uuid('user_id');
-            $table->enum('status', TasksConstants::TaskAllowedStatus);
+            $table->enum('status', TasksConstants::TaskAllowedStatus)->default(TasksConstants::PendingTaskStatus);
             $table->foreign(UsersConstants::userId)->references(UsersConstants::userId)->on("users");
             $table->index(UsersConstants::userId);
 

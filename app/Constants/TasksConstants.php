@@ -16,4 +16,8 @@ class TasksConstants
     const Status = "status";
     const Title = "title";
     const Description = "description";
+    const Priority = "priority";
+    const DefaultTaskPriority = 5;
+    const MaximumTaskPriority = 10;
+    const MinimumTaskPriority = 1;
 }

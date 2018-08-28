@@ -88,9 +88,24 @@ class TaskValidator
 
             return $validtionStatus;
         }
+        if (self::isInvalidPriority($request))
+        {
+            $validtionStatus[TasksConstants::Status] = AppConstants::Failure;
+            $validtionStatus[AppConstants::Error] = ErrorMessages::INVALID_TASK_PRIORITY;
+
+            return $validtionStatus;
+        }
 
         return $validtionStatus;
 
+    }
+
+    public static function isInvalidPriority(Request $request){
+        $priority = $request->input(TasksConstants::Priority);
+
+        return $priority !=null and
+            !(is_int($priority) and
+                (($priority <= TasksConstants::MaximumTaskPriority) and (TasksConstants::MinimumTaskPriority <= $priority)));
     }
 
     public static function isInvalidTaskTitle(Request $request)

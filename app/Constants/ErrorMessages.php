@@ -23,6 +23,7 @@ class ErrorMessages
     const INVALID_TASK_STATUS = "invalid task status";
     const ALREADY_CHANGED_STATUS = "task status is already in {status} state";
     const INVALID_TASK = "invalid task";
+    const INVALID_TASK_PRIORITY = "invalid task priority , priority should be between 1 to 10";
 
     /*
      * User Related

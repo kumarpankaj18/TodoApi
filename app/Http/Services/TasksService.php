@@ -8,7 +8,6 @@
 
 namespace App\Http\Services;
 
-use App\Constants\AppConstants;
 use App\Constants\TasksConstants;
 use App\Constants\UsersConstants;
 use App\Models\Task;
@@ -27,6 +26,7 @@ class TasksService
         $task->description = $request->input(TasksConstants::Description);
         $status  =  $request->input(TasksConstants::Status);
         $task->status = $status !=null  ? $status : TasksConstants::PendingTaskStatus;
+        $task->priority =  $request->input(TasksConstants::Priority);
         $task->save();
 
         return $task;
@@ -65,9 +65,9 @@ class TasksService
 
     public function getUserTasks(String $userId)
     {
-        return Task::where(\App\Constants\UsersConstants::userId, $userId)
+        return Task::where(UsersConstants::userId, $userId)
             ->orderBy(TasksConstants::Status, AppConstants::SortDESC)
-            ->orderBy('created_at', AppConstants::SortASC)
+            ->orderBy(TasksConstants::Priority, AppConstants::SortASC)
             ->get();
     }
 }
