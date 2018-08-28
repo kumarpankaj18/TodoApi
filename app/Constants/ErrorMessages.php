@@ -28,7 +28,7 @@ class ErrorMessages
     /*
      * User Related
      */
-    const NAME_IS_REQUIRED = "name is required field";
+    const NAME_IS_REQUIRED = "name is required field and supports only [A-Z,a-z]";
     const INVALID_USER_ID = "invalid User Id";
     const INVALID_USER = "Invalid user";
     const INVALID_USER_EMAIL  = "invalid email";
