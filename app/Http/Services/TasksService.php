@@ -8,8 +8,10 @@
 
 namespace App\Http\Services;
 
+use App\Constants\AppConstants;
+use App\Constants\TasksConstants;
+use App\Constants\UsersConstants;
 use App\Models\Task;
-use App\UsersConstants;
 use Illuminate\Http\Request;
 
 class TasksService
@@ -21,9 +23,10 @@ class TasksService
             $task = new Task();
             $task->user_id = $request->input(UsersConstants::userId);
         }
-        $task->title = $request->input("title");
-        $task->description = $request->input("description");
-        $task->status = $request->input("status");
+        $task->title = $request->input(TasksConstants::Title);
+        $task->description = $request->input(TasksConstants::Description);
+        $status  =  $request->input(TasksConstants::Status);
+        $task->status = $status !=null  ? $status : TasksConstants::PendingTaskStatus;
         $task->save();
 
         return $task;
@@ -47,13 +50,13 @@ class TasksService
 
     }
 
-    public function updateTaskStatus($task, $request)
-    {
-        $task->status = $request->input(TasksConstants::Status);
-        $task->save();
-
-        return $task;
-    }
+//    public function updateTaskStatus($task, $request)
+//    {
+//        $task->status = $request->input(TasksConstants::Status);
+//        $task->save();
+//
+//        return $task;
+//    }
 
     public function getAllTasks()
     {
@@ -62,9 +65,9 @@ class TasksService
 
     public function getUserTasks(String $userId)
     {
-        return Task::where('user_id', $userId)
-            ->orderBy('status', 'desc')
-            ->orderBy('created_at', 'asc')
+        return Task::where(\App\Constants\UsersConstants::userId, $userId)
+            ->orderBy(TasksConstants::Status, AppConstants::SortDESC)
+            ->orderBy('created_at', AppConstants::SortASC)
             ->get();
     }
 }

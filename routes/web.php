@@ -20,4 +20,4 @@ Route::resource('tasks', 'TasksController')->only(['show','update','destroy','st
 Route::resource('user', 'UserController')->only(['show','destroy','update','store', 'index']);
 
 Route::get('/user/{user_id}/tasks', 'TasksController@getUserTasks');
-Route::put('/tasks/{id}/updateStatus', 'TasksController@updateTaskStatus');
+//Route::put('/tasks/{id}/updateStatus', 'TasksController@updateTaskStatus');

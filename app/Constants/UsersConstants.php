@@ -12,4 +12,7 @@ namespace App\Constants;
 class UsersConstants
 {
     const userId = "user_id";
+    const name = "name";
+    const phone = "phone";
+    const email = "email";
 }

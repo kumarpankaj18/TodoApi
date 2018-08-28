@@ -1,6 +1,7 @@
 <?php
 
-use App\UsersConstants;
+use App\Constants\TasksConstants;
+use App\Constants\UsersConstants;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,7 +20,7 @@ class CreateTasksTable extends Migration
             $table->string('title', 100);
             $table->string('description')->nullable();
             $table->uuid('user_id');
-            $table->enum('status', ["completed", "pending"]);
+            $table->enum('status', TasksConstants::TaskAllowedStatus);
             $table->foreign(UsersConstants::userId)->references(UsersConstants::userId)->on("users");
             $table->index(UsersConstants::userId);
 

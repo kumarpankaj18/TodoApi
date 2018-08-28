@@ -13,5 +13,8 @@ class AppConstants
 {
     const Success = "success";
     const Failure = "failure";
+    const Error  = "error";
+    const SortASC = "asc";
+    const SortDESC = "desc";
 
 }

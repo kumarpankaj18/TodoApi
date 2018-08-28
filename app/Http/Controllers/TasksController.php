@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Constants\AppConstants;
+use App\Constants\ErrorMessages;
 use App\Constants\TasksConstants;
 use App\Constants\UsersConstants;
 use App\Http\Controllers\validator\TaskValidator;
@@ -66,7 +67,7 @@ class TasksController extends Controller
     {
         $filteredRequest = [];
         $filteredRequest[TasksConstants::Status] = AppConstants::Failure;
-        $filteredRequest["error"] = "invalid user id";
+        $filteredRequest[AppConstants::Error] = ErrorMessages::INVALID_USER_ID;
 
         return response()->json($filteredRequest, 400);
     }
@@ -109,7 +110,7 @@ class TasksController extends Controller
             return response()->json($filteredRequest, 400);
         }
 
-        return response()->json($this->service->createOrUpdateTasks($request));
+        return response()->json($this->service->createOrUpdateTasks($request, $task));
     }
 
     /**
@@ -120,7 +121,7 @@ class TasksController extends Controller
      */
     public function destroy($id)
     {
-        return $this->service->deleteUser($id);
+        return response()->json($this->service->deleteTask($id));
     }
 
     public function getUserTasks(String $userId)
@@ -129,7 +130,7 @@ class TasksController extends Controller
         if (TaskValidator::isInvalidUser($user))
         {
             $filteredRequest[TasksConstants::Status] = AppConstants::Failure;
-            $filteredRequest["error"] = "invalid user id";
+            $filteredRequest[AppConstants::Error] = ErrorMessages::INVALID_USER_ID;
 
             return $filteredRequest;
         }
@@ -137,20 +138,20 @@ class TasksController extends Controller
         return $this->service->getUserTasks($userId);
     }
 
-    public function updateTaskStatus(Request $request, int $taskId)
-    {
-        if (UserValidator::isInvalidUserId($request))
-        {
-            return $this->handleInvalidUserIdCase();
-        }
-        $user = $this->userService->getUserByUserId($request->input(UsersConstants::userId));
-        $task = $this->service->getTaskById($taskId);
-        $filteredRequest = $this->validator->validateUpdateStatusTask($request, $user, $task);
-        if ($filteredRequest[TasksConstants::Status] === AppConstants::Failure)
-        {
-            return response()->json($filteredRequest, 400);
-        }
-
-        return response()->json($this->service->updateTaskStatus($task, $request));
-    }
+//    public function updateTaskStatus(Request $request, int $taskId)
+//    {
+//        if (UserValidator::isInvalidUserId($request))
+//        {
+//            return $this->handleInvalidUserIdCase();
+//        }
+//        $user = $this->userService->getUserByUserId($request->input(UsersConstants::userId));
+//        $task = $this->service->getTaskById($taskId);
+//        $filteredRequest = $this->validator->validateUpdateStatusTask($request, $user, $task);
+//        if ($filteredRequest[TasksConstants::Status] === AppConstants::Failure)
+//        {
+//            return response()->json($filteredRequest, 400);
+//        }
+//
+//        return response()->json($this->service->updateTaskStatus($task, $request));
+//    }
 }

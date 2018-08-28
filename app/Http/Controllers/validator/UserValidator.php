@@ -10,6 +10,7 @@ namespace App\Http\Controllers\validator;
 
 
 use App\Constants\AppConstants;
+use App\Constants\ErrorMessages;
 use App\Constants\TasksConstants;
 use App\Constants\UsersConstants;
 use FlorianWolters\Component\Core\StringUtils;
@@ -24,7 +25,7 @@ class UserValidator
         if (self::isInvalidUser($user))
         {
             $validtionStatus[TasksConstants::Status] = AppConstants::Failure;
-            $validtionStatus["error"] = "invalid user";
+            $validtionStatus[AppConstants::Error] = ErrorMessages::INVALID_USER;
 
             return $validtionStatus;
         }
@@ -45,15 +46,14 @@ class UserValidator
         if (self::isInvalidValidUserName($request))
         {
             $validtionStatus[TasksConstants::Status] = AppConstants::Failure;
-            $validtionStatus["error"] = "name is required field";
-
+            $validtionStatus[AppConstants::Error] = ErrorMessages::NAME_IS_REQUIRED;
             return $validtionStatus;
         }
 
         if (self::isInvalidValidEmail($request))
         {
             $validtionStatus[TasksConstants::Status] = AppConstants::Failure;
-            $validtionStatus["error"] = "email is required field";
+            $validtionStatus[AppConstants::Error] = ErrorMessages::INVALID_USER_EMAIL;
 
             return $validtionStatus;
         }
@@ -61,7 +61,7 @@ class UserValidator
         if (self::isInvalidValidPhone($request))
         {
             $validtionStatus[TasksConstants::Status] = AppConstants::Failure;
-            $validtionStatus["error"] = "phone is required field";
+            $validtionStatus[AppConstants::Error] = ErrorMessages::INVALID_PHONE_NUMBER;
 
             return $validtionStatus;
         }
@@ -70,23 +70,23 @@ class UserValidator
 
     public static function isInvalidValidUserName(Request $request)
     {
-        $userName = $request->input("name");
+        $userName = $request->input(UsersConstants::name);
 
-        return !preg_match("/^[a-zA-Z ]*$/", $userName);
+        return StringUtils::isEmpty($userName) or !preg_match("/^[a-zA-Z ]+$/", $userName);
     }
 
     public static function isInvalidValidEmail(Request $request)
     {
-        $email = $request->input("email");
+        $email = $request->input(UsersConstants::email);
 
-        return !filter_var($email, FILTER_VALIDATE_EMAIL);
+        return StringUtils::isEmpty($email) or !filter_var($email, FILTER_VALIDATE_EMAIL);
     }
 
     public static function isInvalidValidPhone(Request $request)
     {
-        $phone = $request->input("phone");
+        $phone = $request->input(UsersConstants::phone);
 
-        return !(preg_match("^[6-9]\d{9}$", $phone));
+        return StringUtils::isEmpty($phone) or !(preg_match("/^[6-9]\d{9}$/", $phone));
     }
 
     public static function isInvalidUserId(Request $request)

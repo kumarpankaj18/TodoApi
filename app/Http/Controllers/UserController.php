@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Constants\AppConstants;
+use App\Constants\TasksConstants;
 use App\Http\Controllers\validator\UserValidator;
 use App\Http\Services\UserService;
 use Illuminate\Http\Request;
@@ -34,7 +35,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $filteredRequest = $this->validator->validateUserCreateRequest($request);
-        if ($filteredRequest["status"] === AppConstants::Failure)
+        if ($filteredRequest[TasksConstants::Status] === AppConstants::Failure)
         {
             return response()->json($filteredRequest, 400);
         }
@@ -71,7 +72,7 @@ class UserController extends Controller
     {
         $user = $this->service->getUserById($id);
         $filteredRequest = $this->validator->validateUserUpdateRequest($request, $user);
-        if ($filteredRequest["status"] === AppConstants::Failure)
+        if ($filteredRequest[TasksConstants::Status] === AppConstants::Failure)
         {
             return response()->json($filteredRequest, 400);
         }
@@ -88,8 +89,7 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        $this->service->deleteUser($id);
 
-        return response()->json("", 200);
+        return response()->json( $this->service->deleteUser($id));
     }
 }

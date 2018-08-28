@@ -10,21 +10,16 @@ namespace App\Http\Controllers\validator;
 
 
 use App\Constants\AppConstants;
+use App\Constants\ErrorMessages;
 use App\Constants\TasksConstants;
 use App\Models\Task;
 use App\Models\User;
 use FlorianWolters\Component\Core\StringUtils;
 use Illuminate\Http\Request;
+use phpDocumentor\Reflection\Types\Array_;
 
 class TaskValidator
 {
-    public static function isInvalidValidPhone(Request $request)
-    {
-        $phone = $request->input("phone");
-
-        return !(preg_match("^[6-9]\d{9}$", $phone));
-    }
-
     public static function validateTaskUpdateRequest(Request $request, User $user, Task $task)
     {
         $validtionStatus = [];
@@ -33,14 +28,14 @@ class TaskValidator
         if (self::isInvalidTask($task))
         {
             $validtionStatus[TasksConstants::Status] = AppConstants::Failure;
-            $validtionStatus["error"] = "invalid task";
+            $validtionStatus[AppConstants::Error] = ErrorMessages::INVALID_TASK;
 
             return $validtionStatus;
         }
         if (self::isInvalidTaskAndUserCombination($task, $user))
         {
             $validtionStatus[TasksConstants::Status] = AppConstants::Failure;
-            $validtionStatus["error"] = "task belongs to different user";
+            $validtionStatus[AppConstants::Error] = ErrorMessages::INVALID_OPERATION;
 
             return $validtionStatus;
         }
@@ -67,14 +62,14 @@ class TaskValidator
         return $user === null;
     }
 
-    public static function validateTaskCreateRequest(Request $request, User $user)
+    public static function validateTaskCreateRequest(Request $request, User $user = null)
     {
         $validtionStatus = [];
         $validtionStatus[TasksConstants::Status] = AppConstants::Success;
         if (self::isInvalidUser($user))
         {
             $validtionStatus[TasksConstants::Status] = AppConstants::Failure;
-            $validtionStatus["error"] = "invalid user";
+            $validtionStatus[AppConstants::Error] = ErrorMessages::INVALID_USER_ID;
 
             return $validtionStatus;
         }
@@ -82,15 +77,14 @@ class TaskValidator
         if (self::isInvalidTaskTitle($request))
         {
             $validtionStatus[TasksConstants::Status] = AppConstants::Failure;
-            $validtionStatus["error"] = "title is required field";
-
+            $validtionStatus[AppConstants::Error] = ErrorMessages::TITLE_IS_REQUIRED;
             return $validtionStatus;
         }
 
         if (self::isInvalidStatus($request))
         {
             $validtionStatus[TasksConstants::Status] = AppConstants::Failure;
-            $validtionStatus["error"] = "status is required field and allowed values are " . implode(TasksConstants::TaskAllowedStatus, ",");
+            $validtionStatus[AppConstants::Error] = ErrorMessages::INVALID_TASK_STATUS;
 
             return $validtionStatus;
         }
@@ -101,14 +95,14 @@ class TaskValidator
 
     public static function isInvalidTaskTitle(Request $request)
     {
-        return StringUtils::isEmpty($request->input("title"));
+        return StringUtils::isEmpty($request->input(TasksConstants::Title));
     }
 
     public static function isInvalidStatus(Request $request)
     {
         $status = $request->input(TasksConstants::Status);
 
-        return StringUtils::isEmpty($status) || !in_array($status, TasksConstants::TaskAllowedStatus);
+        return !StringUtils::isEmpty($status) and !in_array($status, TasksConstants::TaskAllowedStatus);
     }
 
     public static function validateUpdateStatusTask(Request $request, User $user, Task $task)
@@ -119,7 +113,7 @@ class TaskValidator
         if (self::isInvalidTaskAndUserCombination($task, $user))
         {
             $validtionStatus[TasksConstants::Status] = AppConstants::Failure;
-            $validtionStatus["error"] = "task belongs to different user";
+            $validtionStatus[AppConstants::Error] =  ErrorMessages::INVALID_OPERATION;
 
             return $validtionStatus;
         }
@@ -127,15 +121,16 @@ class TaskValidator
         if (self::isInvalidStatus($request))
         {
             $validtionStatus[TasksConstants::Status] = AppConstants::Failure;
-            $validtionStatus["error"] = "status is required field and allowed values are " . implode(TasksConstants::TaskAllowedStatus, ",");
+            $validtionStatus[AppConstants::Error] = ErrorMessages::INVALID_TASK_STATUS;
 
             return $validtionStatus;
         }
         $status = $request->input(TasksConstants::Status);
         if ($task->status === $status)
         {
+            $variables = array('{status}' => $status);
             $validtionStatus[TasksConstants::Status] = AppConstants::Failure;
-            $validtionStatus["error"] = "task status is already in $status state";
+            $validtionStatus[AppConstants::Error] = strtr(ErrorMessages::ALREADY_CHANGED_STATUS, $variables);
 
             return $validtionStatus;
         }

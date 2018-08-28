@@ -56,9 +56,9 @@ class UserService
             $user = new User();
             $user->user_id = uniqid();
         }
-        $user->name = $request->input("name");
-        $user->email = $request->input("email");
-        $user->phone = $request->input("phone");
+        $user->name = $request->input(UsersConstants::name);
+        $user->email = $request->input(UsersConstants::email);
+        $user->phone = $request->input(UsersConstants::phone);
         $user->save();
 
         return $user;
