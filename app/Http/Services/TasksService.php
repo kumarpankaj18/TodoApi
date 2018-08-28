@@ -8,6 +8,7 @@
 
 namespace App\Http\Services;
 
+use App\Constants\AppConstants;
 use App\Constants\TasksConstants;
 use App\Constants\UsersConstants;
 use App\Models\Task;
@@ -50,14 +51,6 @@ class TasksService
 
     }
 
-//    public function updateTaskStatus($task, $request)
-//    {
-//        $task->status = $request->input(TasksConstants::Status);
-//        $task->save();
-//
-//        return $task;
-//    }
-
     public function getAllTasks()
     {
         return Task::all();
@@ -65,9 +58,34 @@ class TasksService
 
     public function getUserTasks(String $userId)
     {
-        return Task::where(UsersConstants::userId, $userId)
+
+        $tasks = $this->getTaskListForAUser($userId);
+
+        $result = [];
+        foreach ($tasks as $task)
+        {
+            if (array_get($result, $task->status) === null)
+            {
+                $result[$task->status] = [];
+            }
+            array_push($result[$task->status], $task);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param String $userId
+     * @return array of taks
+     */
+    public function getTaskListForAUser(String $userId)
+    {
+        $tasks = Task::where(UsersConstants::userId, $userId)
             ->orderBy(TasksConstants::Status, AppConstants::SortDESC)
             ->orderBy(TasksConstants::Priority, AppConstants::SortASC)
             ->get();
+
+        return $tasks;
     }
+
 }
