@@ -52,7 +52,7 @@ class UserController extends Controller
     public function show($id)
     {
         $user = $this->service->getUserById($id);
-        if (($user === null) or ($user === ""))
+        if ($user === null)
         {
             return response($user, 404);
         }
