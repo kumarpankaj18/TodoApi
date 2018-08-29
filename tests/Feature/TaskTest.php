@@ -9,17 +9,17 @@
 namespace Tests\Feature;
 
 
-use App\Models\User;
-use Tests\TestCase;
-use GuzzleHttp\Client;
 use App\Constants\AppConstants;
 use App\Constants\ErrorMessages;
 use App\Constants\TasksConstants;
 use App\Constants\UsersConstants;
+use App\Models\User;
+use GuzzleHttp\Client;
+use Tests\TestCase;
 
 class TaskTest extends TestCase
 {
-    private $client ;
+    private $client;
 
     public function setUp(): void
     {
@@ -68,7 +68,7 @@ class TaskTest extends TestCase
 
     public function testTaskCreateFailureCaseInvalidUserId()
     {
-        $response = $this->postJson('/tasks', [UsersConstants::userId=> "5b85495532736", TasksConstants::Title => "task4",
+        $response = $this->postJson('/tasks', [UsersConstants::userId => "5b85495532736", TasksConstants::Title => "task4",
             TasksConstants::Description => "4th task", TasksConstants::Priority => 1, TasksConstants::Status => "pending"]);
         $response->assertStatus(400);
         $response->assertJson([TasksConstants::Status => AppConstants::Failure, AppConstants::Error => ErrorMessages::INVALID_USER_ID]);
@@ -77,7 +77,7 @@ class TaskTest extends TestCase
     public function testTaskCreateFailureCaseInvalidTitle()
     {
         $user = User::find(1);
-        $response = $this->postJson('/tasks', [UsersConstants::userId=>$user ->user_id,
+        $response = $this->postJson('/tasks', [UsersConstants::userId => $user->user_id,
             TasksConstants::Description => "4th task", TasksConstants::Priority => 1, TasksConstants::Status => "pending"]);
         $response->assertStatus(400);
         $response->assertJson([TasksConstants::Status => AppConstants::Failure, AppConstants::Error => ErrorMessages::TITLE_IS_REQUIRED]);
@@ -86,7 +86,7 @@ class TaskTest extends TestCase
     public function testTaskCreateFailureCaseInvalidPriority()
     {
         $user = User::find(1);
-        $response = $this->postJson('/tasks', [UsersConstants::userId=>$user ->user_id, TasksConstants::Title => "task4",
+        $response = $this->postJson('/tasks', [UsersConstants::userId => $user->user_id, TasksConstants::Title => "task4",
             TasksConstants::Description => "4th task", TasksConstants::Priority => 11, TasksConstants::Status => "pending"]);
         $response->assertStatus(400);
         $response->assertJson([TasksConstants::Status => AppConstants::Failure, AppConstants::Error => ErrorMessages::INVALID_TASK_PRIORITY]);
@@ -95,7 +95,7 @@ class TaskTest extends TestCase
     public function testTaskCreateSuccessCase()
     {
         $user = User::find(1);
-        $response = $this->postJson('/tasks', [UsersConstants::userId=>$user ->user_id, TasksConstants::Title => "task4",
+        $response = $this->postJson('/tasks', [UsersConstants::userId => $user->user_id, TasksConstants::Title => "task4",
             TasksConstants::Description => "4th task", TasksConstants::Priority => 10, TasksConstants::Status => "pending"]);
         $response->assertStatus(200);
     }
@@ -103,16 +103,14 @@ class TaskTest extends TestCase
     public function testForUser()
     {
         $user = User::find(1);
-        $response = $this->postJson('/tasks', [UsersConstants::userId=>$user ->user_id, TasksConstants::Title => "task4",
+        $response = $this->postJson('/tasks', [UsersConstants::userId => $user->user_id, TasksConstants::Title => "task4",
             TasksConstants::Description => "4th task", TasksConstants::Priority => 10, TasksConstants::Status => "pending"]);
         $response->assertStatus(200);
         $response = $this->get("/user/$user->user_id/tasks");
 
-        $response->assertJson(["pending" => [[UsersConstants::userId=>$user ->user_id, TasksConstants::Title => "task4",
+        $response->assertJson(["pending" => [[UsersConstants::userId => $user->user_id, TasksConstants::Title => "task4",
             TasksConstants::Description => "4th task", TasksConstants::Priority => 10, TasksConstants::Status => TasksConstants::PendingTaskStatus]]]);
     }
-
-
 
 
 }
