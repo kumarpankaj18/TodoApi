@@ -1,9 +1,9 @@
 <?php
 
-use App\Constants\UsersConstants;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddCascadingDelete extends Migration
 {
@@ -16,7 +16,7 @@ class AddCascadingDelete extends Migration
     {
         Schema::table('tasks', function (Blueprint $table) {
             $table->dropForeign("tasks_user_id_foreign");
-            $table->foreign(UsersConstants::userId)->references(UsersConstants::userId)->on("users")->onDelete('cascade');;
+            $table->foreign(User::userId)->references(User::userId)->on("users")->onDelete('cascade');;
 
         });
     }

@@ -1,6 +1,6 @@
 <?php
 
-use App\Constants\UsersConstants;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,11 +16,12 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
-            $table->uuid(UsersConstants::userId)->unique();
-            $table->string(UsersConstants::name, 100);
-            $table->string(UsersConstants::email, 100);
-            $table->string(UsersConstants::phone, 15);
-            $table->timestamps();
+            $table->uuid(User::userId)->unique();
+            $table->string(User::name, 100);
+            $table->string(User::email, 100);
+            $table->string(User::phone, 15);
+            $table->integer(User::createdAt);
+            $table->integer(User::updatedAt);
         });
     }
 

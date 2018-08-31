@@ -17,6 +17,6 @@ Route::get('/', function () {
 });
 
 Route::resource('tasks', 'TasksController')->only(['show','update','destroy','store', 'index']);
-Route::resource('user', 'UserController')->only(['show','destroy','update','store', 'index']);
+Route::resource('users', 'UserController')->only(['show','destroy','update','store', 'index']);
 
-Route::get('/user/{user_id}/tasks', 'TasksController@getUserTasks');
+Route::get('/users/{user_id}/tasks', 'TasksController@getUserTasks');

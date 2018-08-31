@@ -1,9 +1,9 @@
 <?php
 
-use App\Constants\UsersConstants;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class IncreasePhoneColumnLength extends Migration
 {
@@ -15,7 +15,7 @@ class IncreasePhoneColumnLength extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string(UsersConstants::phone, 50)->change();
+            $table->string(User::phone, 50)->change();
         });
     }
 

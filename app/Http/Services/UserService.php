@@ -8,7 +8,6 @@
 
 namespace App\Http\Services;
 
-use App\Constants\UsersConstants;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -25,9 +24,9 @@ class UserService
         return User::find($id);
     }
 
-    public function getAllTasks()
+    public function getAllTasks() :array
     {
-        return User::all();
+        return ["data" => User::all()];
     }
 
     public function getUserByUserId(String $userId)
@@ -37,12 +36,11 @@ class UserService
             return null;
         }
 
-        return User::where(UsersConstants::userId, $userId)->first();
+        return User::where(User::userId, $userId)->first();
     }
 
-    public function deleteUser(int $id)
+    public function deleteUser(User $user)
     {
-        $user = User::findOrFail($id);
         if ($user != null)
         {
             return $user->delete();
@@ -56,9 +54,8 @@ class UserService
             $user = new User();
             $user->user_id = uniqid();
         }
-        $user->name = $request->input(UsersConstants::name);
-        $user->email = $request->input(UsersConstants::email);
-        $user->phone = $request->input(UsersConstants::phone);
+        $data = $request->all();
+        $user->fill($data);
         $user->save();
 
         return $user;

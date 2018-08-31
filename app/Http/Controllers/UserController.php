@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 
 use App\Constants\AppConstants;
-use App\Constants\TasksConstants;
+use App\Constants\ErrorMessages;
 use App\Http\Controllers\validator\UserValidator;
 use App\Http\Services\UserService;
+use App\Models\Task;
 use Illuminate\Http\Request;
+use Validator;
 
 class UserController extends Controller
 {
@@ -34,10 +36,10 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $filteredRequest = $this->validator->validateUserCreateRequest($request);
-        if ($filteredRequest[TasksConstants::Status] === AppConstants::Failure)
+        $validator = Validator::make($request->all(), UserValidator::$createUsers);
+        if($validator->fails())
         {
-            return response()->json($filteredRequest, 400);
+            return response()->json( [ AppConstants::Errors => $validator->errors() ], 400 );
         }
 
         return response()->json($this->service->createOrUpdateUser($request));
@@ -54,7 +56,7 @@ class UserController extends Controller
         $user = $this->service->getUserById($id);
         if ($user === null)
         {
-            return response($user, 404);
+            return response([ AppConstants::Errors => ErrorMessages::INVALID_USER_ID], 400);
         }
 
         return response()->json($user);
@@ -70,12 +72,12 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = $this->service->getUserById($id);
-        $filteredRequest = $this->validator->validateUserUpdateRequest($request, $user);
-        if ($filteredRequest[TasksConstants::Status] === AppConstants::Failure)
+        $validator = Validator::make($request->all(), UserValidator::$updateUser);
+        if($validator->fails())
         {
-            return response()->json($filteredRequest, 400);
+            return response()->json( [ AppConstants::Errors => $validator->errors() ], 400 );
         }
+        $user = $this->service->getUserById($id);
 
         return response()->json($this->service->createOrUpdateUser($request, $user));
 
@@ -89,7 +91,11 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-
-        return response()->json( $this->service->deleteUser($id));
+        $user = $this->service->getUserById($id);
+        if($user === null){
+            return response()->json([ AppConstants::Errors => ErrorMessages::INVALID_USER_ID], 400);
+        }
+        $this->service->deleteUser($user);
+        return response()->json("", 204);
     }
 }

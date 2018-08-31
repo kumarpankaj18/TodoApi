@@ -9,9 +9,8 @@
 namespace App\Http\Services;
 
 use App\Constants\AppConstants;
-use App\Constants\TasksConstants;
-use App\Constants\UsersConstants;
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class TasksService
@@ -20,14 +19,13 @@ class TasksService
     {
         if ($task == null)
         {
-            $task = new Task();
-            $task->user_id = $request->input(UsersConstants::userId);
+            $task = new Task($request->all());
+            $task->user_id = $request->input(User::userId);
+        } else
+        {
+            $task->fill($request->only(Task::updatable));
         }
-        $task->title = $request->input(TasksConstants::Title);
-        $task->description = $request->input(TasksConstants::Description);
-        $status  =  $request->input(TasksConstants::Status);
-        $task->status = $status !=null  ? $status : TasksConstants::PendingTaskStatus;
-        $task->priority =  $request->input(TasksConstants::Priority);
+
         $task->save();
 
         return $task;
@@ -43,33 +41,26 @@ class TasksService
         return Task::find($id);
     }
 
-    public function deleteTask(int $id)
+    public function deleteTask(Task $task)
     {
-        $task = Task::findOrFail($id);
-
-        return $task->delete();
+        if($task !== null)
+        {
+            return $task->delete();
+        }
 
     }
 
-    public function getAllTasks()
+    public function getAllTasks() :array
     {
-        return Task::all();
+        return ["data" =>Task::all()];
     }
 
-    public function getUserTasks(String $userId)
+    public function getUserTasks(String $userId) :array
     {
 
         $tasks = $this->getTaskListForAUser($userId);
 
-        $result = [];
-        foreach ($tasks as $task)
-        {
-            if (array_get($result, $task->status) === null)
-            {
-                $result[$task->status] = [];
-            }
-            array_push($result[$task->status], $task);
-        }
+        $result = ["data" => $tasks];
 
         return $result;
     }
@@ -80,9 +71,9 @@ class TasksService
      */
     public function getTaskListForAUser(String $userId)
     {
-        $tasks = Task::where(UsersConstants::userId, $userId)
-            ->orderBy(TasksConstants::Status, AppConstants::SortDESC)
-            ->orderBy(TasksConstants::Priority, AppConstants::SortASC)
+        $tasks = Task::where(User::userId, $userId)
+            ->orderBy(Task::Status, AppConstants::SortDESC)
+            ->orderBy(Task::Priority, AppConstants::SortASC)
             ->get();
 
         return $tasks;

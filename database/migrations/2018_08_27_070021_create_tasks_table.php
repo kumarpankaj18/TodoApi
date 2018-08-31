@@ -1,7 +1,7 @@
 <?php
 
-use App\Constants\TasksConstants;
-use App\Constants\UsersConstants;
+use App\Models\Task;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,14 +17,14 @@ class CreateTasksTable extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title', 100);
-            $table->string('description')->nullable();
-            $table->uuid('user_id');
-            $table->enum('status', TasksConstants::TaskAllowedStatus)->default(TasksConstants::PendingTaskStatus);
-            $table->foreign(UsersConstants::userId)->references(UsersConstants::userId)->on("users");
-            $table->index(UsersConstants::userId);
-
-            $table->timestamps();
+            $table->string(Task::Title, 100);
+            $table->text(Task::Description)->nullable();
+            $table->uuid(User::userId);
+            $table->string(Task::Status, 20)->default(Task::PendingTaskStatus);
+            $table->foreign(User::userId)->references(User::userId)->on("users");
+            $table->index(User::userId);
+            $table->integer(User::createdAt);
+            $table->integer(User::updatedAt);
         });
     }
 
