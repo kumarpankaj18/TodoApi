@@ -13,16 +13,18 @@ use App\Constants\AppConstants;
 use App\Constants\ErrorMessages;
 use App\Models\Task;
 use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
 class TaskTest extends TestCase
 {
+    use DatabaseTransactions;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->artisan('migrate:fresh');
-        $this->artisan('db:seed');
+        //$this->artisan('migrate:fresh');
+       // $this->artisan('db:seed');
     }
     public function testTaskGetByIdSuccessCase()
     {
