@@ -12,6 +12,6 @@ jobs:
     - name: Pull request merged
       if: github.event.pull_request.merged == true
       uses: jessfraz/branch-cleanup-action@master
-      with:
+      env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
