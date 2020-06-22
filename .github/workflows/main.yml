@@ -10,5 +10,5 @@ jobs:
 
     steps:
     - name: Pull request merged
-      if: github. **event**.pull_request.merged == true
+      if: github.event.pull_request.merged == true
       run: echo merged
